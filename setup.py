@@ -21,7 +21,7 @@ platform_to_compiler_flags = {
 mod1 = Extension(
     'rocksdb._rocksdb',
     sources,
-    extra_compile_args=platform_to_compiler_flags.get(platform.system(), default_flags),
+    extra_compile_args=list(platform_to_compiler_flags.get(platform.system(), default_flags)),
     language='c++',
     libraries=[
         'rocksdb',
