@@ -1,6 +1,7 @@
 from setuptools import setup
 from setuptools import find_packages
 from distutils.extension import Extension
+import platform
 
 try:
     from Cython.Build import cythonize
@@ -10,17 +11,17 @@ except ImportError:
 else:
     sources = ['rocksdb/_rocksdb.pyx']
 
+default_flags={ '-std=c++11', '-O3', '-Wall', '-Wextra', '-Wconversion', '-fno-strict-aliasing' }
+
+platform_to_compiler_flags = {
+    'linux':default_flags,
+    'windows':{ '/O2', '/Wall' }
+}
+
 mod1 = Extension(
     'rocksdb._rocksdb',
     sources,
-    extra_compile_args=[
-        '-std=c++11',
-        '-O3',
-        '-Wall',
-        '-Wextra',
-        '-Wconversion',
-        '-fno-strict-aliasing'
-    ],
+    extra_compile_args=platform_to_compiler_flags.get(platform.system(), default_flags),
     language='c++',
     libraries=[
         'rocksdb',
